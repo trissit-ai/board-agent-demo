@@ -1,0 +1,2759 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "projectName": "自治 Board Agent 协同看板",
+    "projectSubName": "品牌中立 · 方法论演示",
+    "demoNotice": "演示虚构数据",
+    "customNotice": "自定义",
+    "readonlyNotice": "只读模式：未连接配置服务",
+    "simNotice": "规则模拟 / 虚构数据",
+    "capacityNotice": "26 个并发槽位与 I_peak 公式均为纯假设示例，不是行业标准或最佳配置",
+    "disclaimer": "本页所有业务对象、名称、数字、指标与容量测算均为演示虚构数据，不构成收益承诺、行业标准或真实业务指标。看板是共享结构化状态与协同记忆，不替代 DMS／CRM／ERP／TMS／WMS 等权威业务系统。",
+    "dataSource": "本地 config.json",
+    "boundary": "不接模型、不接业务系统、不调用任何外部接口；规则引擎为纯前端确定性模拟。"
+  },
+  "boards": [
+    {
+      "id": "B1",
+      "name": "计划储运",
+      "fullName": "计划商务及储运",
+      "goal": "让每台车的承诺、位置与异常可追踪",
+      "owner": "计划储运 Board Agent",
+      "humanOwner": "计划负责人 A",
+      "autonomyLevel": "L2",
+      "slaHours": 24,
+      "wipLimit": 3,
+      "riskRules": [
+        "ETA 变化超过设定阈值",
+        "订单承诺日与预计到港日冲突",
+        "VIN 长时间无状态更新",
+        "库存库龄或缺件达到预警条件"
+      ],
+      "humanGates": [
+        "对外交付承诺变更",
+        "额外运费审批",
+        "涉及合同或赔偿的方案"
+      ],
+      "status": "active",
+      "color": "#F0A04B",
+      "charter": "以订单、车型、VIN 为主键，维护需求预测、配额、订舱、在途与入库节点的一致性；异常先归并再建卡，禁止自行修改客户承诺。"
+    },
+    {
+      "id": "B2",
+      "name": "销售",
+      "fullName": "销售与交付",
+      "goal": "线索到订单、订单到交付的责任不断点",
+      "owner": "销售 Board Agent",
+      "humanOwner": "销售负责人 A",
+      "autonomyLevel": "L2",
+      "slaHours": 16,
+      "wipLimit": 3,
+      "riskRules": [
+        "线索超时未跟进",
+        "高意向无下一动作",
+        "订单缺资料",
+        "交付风险升级"
+      ],
+      "humanGates": [
+        "报价与折扣",
+        "合同",
+        "正式客户通知",
+        "退款与承诺变更"
+      ],
+      "status": "active",
+      "color": "#9EC5CF",
+      "charter": "以经销商、店面、线索、订单为主键；客户外发内容仅存草稿，价格与合同版本保持不变，正式发送与写回必须人工批准。"
+    },
+    {
+      "id": "B3",
+      "name": "售后服务",
+      "fullName": "售后服务",
+      "goal": "维修工单与备件供应在同一张依赖图上协同",
+      "owner": "售后 Board Agent",
+      "humanOwner": "售后负责人 A",
+      "autonomyLevel": "L2",
+      "slaHours": 12,
+      "wipLimit": 2,
+      "riskRules": [
+        "工单停滞",
+        "配件缺货",
+        "返修",
+        "服务超时"
+      ],
+      "humanGates": [
+        "安全维修结论",
+        "保修责任与善意补偿",
+        "召回与客户安全通知",
+        "监管报送"
+      ],
+      "status": "active",
+      "color": "#E8875A",
+      "charter": "以 VIN、工单、备件为主键；缺件时建立调拨卡并把到货设为维修卡前置依赖，安全相关结论一律人工门。"
+    },
+    {
+      "id": "B4",
+      "name": "市场品牌",
+      "fullName": "市场品牌",
+      "goal": "活动、素材、渠道与舆情节奏一致",
+      "owner": "市场品牌 Board Agent",
+      "humanOwner": "品牌负责人 A",
+      "autonomyLevel": "L1",
+      "slaHours": 8,
+      "wipLimit": 2,
+      "riskRules": [
+        "素材逾期",
+        "审批退回",
+        "渠道变更",
+        "舆情峰值",
+        "缺少来源的内容"
+      ],
+      "humanGates": [
+        "对外发布",
+        "重大舆情回应",
+        "品牌承诺",
+        "预算动用"
+      ],
+      "status": "active",
+      "color": "#D9A3B4",
+      "charter": "以市场、活动、话题、内容为主键；缺少原始来源的内容不得进入外部响应，重大风险立即升级并冻结发布。"
+    },
+    {
+      "id": "B5",
+      "name": "设计",
+      "fullName": "设计",
+      "goal": "需求、方案、评审与版本证据一致",
+      "owner": "设计 Board Agent",
+      "humanOwner": "设计负责人 A",
+      "autonomyLevel": "L2",
+      "slaHours": 48,
+      "wipLimit": 2,
+      "riskRules": [
+        "Brief 字段缺失",
+        "版本冲突",
+        "评审缺人",
+        "验收缺证据",
+        "过期素材误用"
+      ],
+      "humanGates": [
+        "关键视觉定稿",
+        "事实与合规审核",
+        "对外发布",
+        "授权范围变更"
+      ],
+      "status": "active",
+      "color": "#9BB4D4",
+      "charter": "以车型、活动、资产、版本为主键；资产卡必须记录源文件、适用范围、授权到期与新旧版本替代关系。"
+    },
+    {
+      "id": "B6",
+      "name": "产品管理",
+      "fullName": "产品管理",
+      "goal": "规划、配置、上市与跨部门依赖可控",
+      "owner": "产品管理 Board Agent",
+      "humanOwner": "产品负责人 A",
+      "autonomyLevel": "L2",
+      "slaHours": 72,
+      "wipLimit": 2,
+      "riskRules": [
+        "配置变更",
+        "里程碑滑移",
+        "认证缺口",
+        "上市依赖未完成"
+      ],
+      "humanGates": [
+        "产品定义与配置冻结",
+        "上市批准",
+        "重大变更"
+      ],
+      "status": "active",
+      "color": "#9CC5A8",
+      "charter": "以车型、配置、认证、软件版本为主键；任何配置变化自动找出受影响的下游卡片，上市 Review 核对可销售、可交付、可维修、可传播。"
+    },
+    {
+      "id": "B7",
+      "name": "财法融资价格",
+      "fullName": "财务法务融资价格",
+      "goal": "资料、审批、合同、信用、价格与付款可追踪",
+      "owner": "财法融资价格 Board Agent",
+      "humanOwner": "财法负责人 A",
+      "autonomyLevel": "L1",
+      "slaHours": 24,
+      "wipLimit": 2,
+      "riskRules": [
+        "合同缺件",
+        "审批超时",
+        "信用异常",
+        "价格申请",
+        "付款逾期"
+      ],
+      "humanGates": [
+        "报价与价格发布",
+        "合同签署",
+        "授信与放款",
+        "付款与退款",
+        "法律结论"
+      ],
+      "status": "active",
+      "color": "#E9C46A",
+      "charter": "以客户、合同、价格版本、交易为主键；只做完整性检查与差异提示，金额、利率、折扣、合同外发必须审批，不做自动执行。"
+    }
+  ],
+  "stateMachine": {
+    "states": [
+      {
+        "id": "Triage",
+        "name": "分流",
+        "en": "TRIAGE",
+        "desc": "目标与业务对象待确认，不进入执行",
+        "color": "#B8C6CA"
+      },
+      {
+        "id": "Todo",
+        "name": "等待依赖",
+        "en": "TODO",
+        "desc": "已准入，等待输入、权限或前置卡完成",
+        "color": "#A3B3B8"
+      },
+      {
+        "id": "Ready",
+        "name": "待调度",
+        "en": "READY",
+        "desc": "输入齐备，等待原子认领与 WIP 空位",
+        "color": "#F0A04B"
+      },
+      {
+        "id": "Running",
+        "name": "执行中",
+        "en": "RUNNING",
+        "desc": "按需运行实例执行，持续心跳与预算监测",
+        "color": "#9EC5CF"
+      },
+      {
+        "id": "Blocked",
+        "name": "需要介入",
+        "en": "BLOCKED",
+        "desc": "缺资料或缺决策，记录缺口、解除人与升级时间",
+        "color": "#E8875A"
+      },
+      {
+        "id": "Review",
+        "name": "业务验收",
+        "en": "REVIEW",
+        "desc": "产物与证据待人工验收，高风险动作强制停留",
+        "color": "#E9C46A"
+      },
+      {
+        "id": "Done",
+        "name": "已完成",
+        "en": "DONE",
+        "desc": "协同任务完成，已取得系统回执与审批证据",
+        "color": "#9CC5A8"
+      },
+      {
+        "id": "Archived",
+        "name": "归档",
+        "en": "ARCHIVED",
+        "desc": "历史保留，后续问题新建子卡继承证据",
+        "color": "#8FA2A8"
+      }
+    ],
+    "defaultColumns": [
+      "Triage",
+      "Ready",
+      "Running",
+      "Review",
+      "Blocked",
+      "Done"
+    ],
+    "allColumns": [
+      "Triage",
+      "Todo",
+      "Ready",
+      "Running",
+      "Blocked",
+      "Review",
+      "Done",
+      "Archived"
+    ],
+    "collapsedColumns": [
+      "Todo",
+      "Archived"
+    ],
+    "guards": [
+      {
+        "from": "Triage",
+        "to": "Todo",
+        "requirements": [
+          "目标与完成定义明确",
+          "业务对象 ID 存在",
+          "人类 Owner 已指派",
+          "验收条件已定义",
+          "事件幂等去重已完成"
+        ],
+        "reason": "准入不全，留在分流，不进入执行"
+      },
+      {
+        "from": "Todo",
+        "to": "Ready",
+        "requirements": [
+          "输入与来源齐备",
+          "权限与数据可用",
+          "责任人已确定",
+          "验收条件齐备",
+          "前置依赖已完成"
+        ],
+        "reason": "就绪条件未满足"
+      },
+      {
+        "from": "Ready",
+        "to": "Running",
+        "requirements": [
+          "原子认领成功",
+          "本板 WIP 未达上限",
+          "已选定共享角色",
+          "已创建运行实例与幂等键"
+        ],
+        "reason": "认领失败或 WIP 已满"
+      },
+      {
+        "from": "Running",
+        "to": "Blocked",
+        "requirements": [
+          "记录缺什么",
+          "记录谁能解除",
+          "记录何时升级"
+        ],
+        "reason": "阻塞三要素不全"
+      },
+      {
+        "from": "Blocked",
+        "to": "Ready",
+        "requirements": [
+          "阻塞缺口已补齐",
+          "解除人已确认",
+          "保留原运行记录"
+        ],
+        "reason": "未补齐缺口，不得解除阻塞"
+      },
+      {
+        "from": "Blocked",
+        "to": "Triage",
+        "requirements": [
+          "反复阻塞达到阈值",
+          "记录重新定义原因"
+        ],
+        "reason": "未达到反复阻塞阈值"
+      },
+      {
+        "from": "Running",
+        "to": "Review",
+        "requirements": [
+          "已附产物",
+          "已附证据",
+          "规则自检通过"
+        ],
+        "reason": "产物或证据不足，不得提交验收"
+      },
+      {
+        "from": "Review",
+        "to": "Done",
+        "requirements": [
+          "规定的人或规则已验收",
+          "产物齐全",
+          "证据齐全",
+          "审批人已记录",
+          "系统回执已取得",
+          "非高风险自动放行"
+        ],
+        "reason": "高风险动作必须人工门，规则引擎不得自动完成"
+      },
+      {
+        "from": "Review",
+        "to": "Running",
+        "requirements": [
+          "驳回理由已记录",
+          "补件清单已生成"
+        ],
+        "reason": "驳回缺少理由"
+      },
+      {
+        "from": "Done",
+        "to": "Archived",
+        "requirements": [
+          "历史保留不删除",
+          "回执与审批证据完整"
+        ],
+        "reason": "证据不完整不得归档"
+      }
+    ],
+    "highRiskActions": [
+      "对外通知",
+      "报价",
+      "折扣",
+      "价格",
+      "合同",
+      "付款",
+      "融资",
+      "安全维修结论",
+      "正式发布",
+      "授信",
+      "退款"
+    ],
+    "note": "状态机与流转守卫为方案设计，非生产配置；全部为演示虚构数据。"
+  },
+  "roles": {
+    "granularity": 6,
+    "groups": [
+      {
+        "id": "RG1",
+        "name": "数据分析",
+        "desc": "主数据核验、预测与异常检测",
+        "subRoles": [
+          {
+            "id": "R01",
+            "name": "数据质量与主数据核验"
+          },
+          {
+            "id": "R02",
+            "name": "预测与异常检测"
+          }
+        ]
+      },
+      {
+        "id": "RG2",
+        "name": "计划调度",
+        "desc": "资源调度与库存运输分析",
+        "subRoles": [
+          {
+            "id": "R03",
+            "name": "计划与资源调度"
+          },
+          {
+            "id": "R04",
+            "name": "库存与运输分析"
+          }
+        ]
+      },
+      {
+        "id": "RG3",
+        "name": "客户与内容",
+        "desc": "多语沟通与内容版本管理",
+        "subRoles": [
+          {
+            "id": "R05",
+            "name": "客户沟通与多语内容"
+          },
+          {
+            "id": "R06",
+            "name": "市场内容与版本管理"
+          }
+        ]
+      },
+      {
+        "id": "RG4",
+        "name": "文档与合规",
+        "desc": "条款差异与财务合规规则检查",
+        "subRoles": [
+          {
+            "id": "R07",
+            "name": "文档抽取与条款差异"
+          },
+          {
+            "id": "R08",
+            "name": "财务与合规规则检查"
+          }
+        ]
+      },
+      {
+        "id": "RG5",
+        "name": "系统执行",
+        "desc": "业务系统执行与产品依赖分析",
+        "subRoles": [
+          {
+            "id": "R09",
+            "name": "业务系统执行"
+          },
+          {
+            "id": "R10",
+            "name": "产品依赖与配置分析"
+          }
+        ]
+      },
+      {
+        "id": "RG6",
+        "name": "质量验收",
+        "desc": "证据整理与设计评审支持",
+        "subRoles": [
+          {
+            "id": "R11",
+            "name": "质量验收与证据整理"
+          },
+          {
+            "id": "R12",
+            "name": "设计需求与评审支持"
+          }
+        ]
+      }
+    ],
+    "globalRoles": [
+      {
+        "id": "G01",
+        "name": "治理与风险监测"
+      },
+      {
+        "id": "G02",
+        "name": "跨板经营分析与冲突协调"
+      }
+    ],
+    "pilot": {
+      "B": 1,
+      "R": 3,
+      "G": 1,
+      "A": 5,
+      "note": "演示虚构数据 · 方案结构假设"
+    },
+    "full": {
+      "B": 7,
+      "R": 12,
+      "G": 2,
+      "A": 21,
+      "AWithControlBoard": 22,
+      "note": "演示虚构数据 · 不是行业标准或最佳配置"
+    },
+    "instances": "按需任务运行实例按峰值并发伸缩，完成后释放，不计入稳定逻辑角色数。",
+    "note": "6 组共享能力池为主，可展开为 12 个细分角色；试点视图显示 5 个逻辑 Agent。"
+  },
+  "governance": [
+    {
+      "id": "GV1",
+      "risk": "目标漂移",
+      "prevention": "业务章程＋硬约束＋独立验收",
+      "detection": "Done 后重开、异常关闭率、投诉",
+      "action": "回滚策略版本，复核已关闭卡"
+    },
+    {
+      "id": "GV2",
+      "risk": "循环与振荡",
+      "prevention": "最大轮次＋转派预算＋依赖环检测",
+      "detection": "无进展时长、重复状态序列",
+      "action": "熔断并升级人类，保留现场"
+    },
+    {
+      "id": "GV3",
+      "risk": "重复动作",
+      "prevention": "幂等键＋原子认领＋预期版本",
+      "detection": "业务主键重复、回执不一致",
+      "action": "去重、补偿、对账与人工确认"
+    },
+    {
+      "id": "GV4",
+      "risk": "越权与泄露",
+      "prevention": "最小权限＋短期凭据＋按动作审批",
+      "detection": "异常工具调用、越权拦截",
+      "action": "撤销凭据、停用角色、审计影响"
+    },
+    {
+      "id": "GV5",
+      "risk": "成本失控",
+      "prevention": "事件过滤＋预算＋WIP",
+      "detection": "每成功任务成本、调用异常增长",
+      "action": "降级规则流程、限流、停用非关键角色"
+    }
+  ],
+  "humanGates": [
+    {
+      "type": "Notify",
+      "name": "通知",
+      "trigger": "重要但无需立即授权的风险",
+      "showFields": [
+        "事实",
+        "影响",
+        "建议关注时间"
+      ],
+      "timeoutBehavior": "继续允许范围内的低风险工作"
+    },
+    {
+      "type": "Question",
+      "name": "提问",
+      "trigger": "缺少业务偏好、数据或责任判断",
+      "showFields": [
+        "已掌握事实",
+        "具体缺口",
+        "可选答案"
+      ],
+      "timeoutBehavior": "卡片 Blocked，不得猜测后继续"
+    },
+    {
+      "type": "Review",
+      "name": "评审",
+      "trigger": "对外动作、重要写回、交付验收",
+      "showFields": [
+        "草稿",
+        "差异",
+        "证据",
+        "风险",
+        "回执目标"
+      ],
+      "timeoutBehavior": "保持 Review，超时升级"
+    },
+    {
+      "type": "Arbitration",
+      "name": "仲裁",
+      "trigger": "跨板目标或资源冲突",
+      "showFields": [
+        "各方目标",
+        "约束",
+        "方案与影响"
+      ],
+      "timeoutBehavior": "冻结冲突动作，不冻结无关工作"
+    },
+    {
+      "type": "Kill",
+      "name": "停用",
+      "trigger": "越权、泄漏、错误扩散或成本异常",
+      "showFields": [
+        "当前运行",
+        "影响范围",
+        "保留证据"
+      ],
+      "timeoutBehavior": "撤销凭据、停止实例、转人工流程"
+    }
+  ],
+  "eventTypes": [
+    {
+      "type": "TRANSPORT_NODE_DELAY",
+      "name": "运输节点延误",
+      "source": "TMS-A",
+      "defaultBoard": "B1",
+      "dedupKey": "entity_id+event_type+version",
+      "desc": "在途节点超时或缺轨迹"
+    },
+    {
+      "type": "ETA_CHANGED",
+      "name": "预计到达时间变更",
+      "source": "TMS-A",
+      "defaultBoard": "B1",
+      "dedupKey": "entity_id+version",
+      "desc": "新旧 ETA 差异超过阈值"
+    },
+    {
+      "type": "ORDER_RISK_RAISED",
+      "name": "订单交付风险",
+      "source": "DMS-A",
+      "defaultBoard": "B2",
+      "dedupKey": "entity_id+event_type+version",
+      "desc": "承诺日期与预计到港冲突"
+    },
+    {
+      "type": "CRM_FIELD_MISSING",
+      "name": "客户字段缺失",
+      "source": "CRM-A",
+      "defaultBoard": "B2",
+      "dedupKey": "entity_id+version",
+      "desc": "客户语言偏好等字段缺失"
+    },
+    {
+      "type": "PART_SHORTAGE",
+      "name": "备件缺口",
+      "source": "WMS-A",
+      "defaultBoard": "B3",
+      "dedupKey": "entity_id+version",
+      "desc": "工单所需备件库存不足"
+    },
+    {
+      "type": "SENTIMENT_SPIKE",
+      "name": "舆情峰值",
+      "source": "监听-A",
+      "defaultBoard": "B4",
+      "dedupKey": "entity_id+version",
+      "desc": "话题声量或负面占比突增"
+    },
+    {
+      "type": "ASSET_VERSION_CONFLICT",
+      "name": "素材版本冲突",
+      "source": "资产库-A",
+      "defaultBoard": "B5",
+      "dedupKey": "entity_id+version",
+      "desc": "配置变更导致素材版本失效"
+    },
+    {
+      "type": "CONFIG_CHANGED",
+      "name": "上市配置变更",
+      "source": "产品库-A",
+      "defaultBoard": "B6",
+      "dedupKey": "entity_id+version",
+      "desc": "车型配置或认证信息变化"
+    },
+    {
+      "type": "PRICE_REQUEST",
+      "name": "价格申请",
+      "source": "合同库-A",
+      "defaultBoard": "B7",
+      "dedupKey": "entity_id+version",
+      "desc": "促销或折扣适用范围待审批"
+    },
+    {
+      "type": "APPROVAL_TIMEOUT",
+      "name": "审批超时",
+      "source": "流程-A",
+      "defaultBoard": "B7",
+      "dedupKey": "entity_id+version",
+      "desc": "审批请求超过期限未处理"
+    }
+  ],
+  "eventTemplates": [
+    {
+      "id": "ETPL-1",
+      "name": "运输节点延误（跨板案例一）",
+      "event_id": "EVT-2026-1124-001",
+      "source": "TMS-A",
+      "entity_id": "VIN-A-0041",
+      "event_type": "TRANSPORT_NODE_DELAY",
+      "occurred_at": "2026-11-24T09:12:00",
+      "version": 3,
+      "trace_id": "TRC-2026-1124-001",
+      "board_id": "B1",
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0041",
+          "VIN-A-0042",
+          "VIN-A-0043",
+          "VIN-A-0044"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081",
+          "ORD-A-2026-0082"
+        ]
+      },
+      "note": "演示虚构数据 · 规则模拟事件"
+    },
+    {
+      "id": "ETPL-2",
+      "name": "上市配置变更（跨板案例二）",
+      "event_id": "EVT-2026-1124-002",
+      "source": "产品库-A",
+      "entity_id": "CFG-A-0007",
+      "event_type": "CONFIG_CHANGED",
+      "occurred_at": "2026-11-24T10:26:00",
+      "version": 2,
+      "trace_id": "TRC-2026-1124-002",
+      "board_id": "B6",
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [
+          "ORD-A-2026-0090"
+        ]
+      },
+      "note": "演示虚构数据 · 规则模拟事件"
+    },
+    {
+      "id": "ETPL-3",
+      "name": "备件缺口",
+      "event_id": "EVT-2026-1124-003",
+      "source": "WMS-A",
+      "entity_id": "PART-A-0112",
+      "event_type": "PART_SHORTAGE",
+      "occurred_at": "2026-11-24T11:04:00",
+      "version": 1,
+      "trace_id": "TRC-2026-1124-003",
+      "board_id": "B3",
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0091"
+        ],
+        "orderIds": []
+      },
+      "note": "演示虚构数据 · 规则模拟事件"
+    },
+    {
+      "id": "ETPL-4",
+      "name": "价格申请",
+      "event_id": "EVT-2026-1124-004",
+      "source": "合同库-A",
+      "entity_id": "ORD-A-2026-0099",
+      "event_type": "PRICE_REQUEST",
+      "occurred_at": "2026-11-24T11:38:00",
+      "version": 1,
+      "trace_id": "TRC-2026-1124-004",
+      "board_id": "B7",
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0102"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0099"
+        ]
+      },
+      "note": "演示虚构数据 · 规则模拟事件"
+    }
+  ],
+  "cards": [
+    {
+      "card_id": "C-PLAN-0001",
+      "board_id": "B1",
+      "title": "汇总港口滞期原因",
+      "goal": "形成在途车辆滞期原因归类，为后续影响分析提供输入",
+      "scope": "市场 A · 车型 A · 在途批次 A",
+      "owner": "计划负责人 A",
+      "agent": "库存与运输分析",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 24,
+      "slaRemainingHours": 18,
+      "dependencies": [],
+      "acceptance": [
+        "滞期原因分类清单",
+        "每个原因附来源与时间戳"
+      ],
+      "state": "Triage",
+      "evidence": [],
+      "run": {
+        "run_id": "",
+        "role": "",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "尚未创建运行实例"
+      },
+      "timeline": [
+        {
+          "at": "09:40",
+          "actor": "事件层",
+          "action": "事件接入",
+          "detail": "港口节点异常进入去重队列，待确认目标与业务对象"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0041"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-001"
+        ],
+        "entityId": "VIN-A-0041"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": false,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PLAN-0002",
+      "board_id": "B1",
+      "title": "核验替代运输方案与费用",
+      "goal": "给出加急运输与原方案的成本、交期对照，供授权人决策",
+      "scope": "4 台车辆 · 关联订单 A",
+      "owner": "计划负责人 A",
+      "agent": "计划与资源调度",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 24,
+      "slaRemainingHours": 6.5,
+      "dependencies": [
+        "C-PLAN-0004"
+      ],
+      "acceptance": [
+        "方案与成本影响表",
+        "新旧 ETA 有来源",
+        "未包含价格承诺"
+      ],
+      "state": "Todo",
+      "evidence": [
+        {
+          "id": "EV-001",
+          "name": "在途节点快照",
+          "version": "v3",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "",
+        "role": "",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "等待前置卡完成"
+      },
+      "timeline": [
+        {
+          "at": "09:20",
+          "actor": "计划储运 Board Agent",
+          "action": "自动建卡",
+          "detail": "由运输节点延误事件拆分出方案对照子卡"
+        },
+        {
+          "at": "09:24",
+          "actor": "计划储运 Board Agent",
+          "action": "准入通过",
+          "detail": "目标、Owner、验收条件齐备，进入等待依赖"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0041",
+          "VIN-A-0042"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-001"
+        ],
+        "entityId": "ORD-A-2026-0081"
+      },
+      "humanGate": "额外运费审批",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PLAN-0003",
+      "board_id": "B1",
+      "title": "清关单证异常匹配",
+      "goal": "把缺失单证与受影响订单逐项匹配，形成补件清单",
+      "scope": "3 份单证 · 关联订单 A",
+      "owner": "计划负责人 A",
+      "agent": "数据质量与主数据核验",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 24,
+      "slaRemainingHours": 9,
+      "dependencies": [],
+      "acceptance": [
+        "订单与单证匹配表",
+        "缺失项逐一标注",
+        "来源版本可追溯"
+      ],
+      "state": "Ready",
+      "evidence": [
+        {
+          "id": "EV-002",
+          "name": "单证清单",
+          "version": "v2",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "",
+        "role": "数据质量与主数据核验",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "等待原子认领"
+      },
+      "timeline": [
+        {
+          "at": "09:32",
+          "actor": "计划储运 Board Agent",
+          "action": "就绪守卫通过",
+          "detail": "输入、权限、责任人、验收条件齐备"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0043",
+          "VIN-A-0044"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0082"
+        ],
+        "eventIds": [],
+        "entityId": "ORD-A-2026-0082"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PLAN-0004",
+      "board_id": "B1",
+      "title": "核验 4 台车辆运输节点与新 ETA",
+      "goal": "确认延误事实、影响订单与新预计到港时间，发布跨板依赖请求",
+      "scope": "4 台车辆 · 关联订单 A",
+      "owner": "计划负责人 A",
+      "agent": "库存与运输分析",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 24,
+      "slaRemainingHours": 3.5,
+      "dependencies": [],
+      "acceptance": [
+        "车辆与订单匹配",
+        "新 ETA 有来源",
+        "未包含价格承诺",
+        "两语版本一致"
+      ],
+      "state": "Running",
+      "evidence": [
+        {
+          "id": "EV-003",
+          "name": "在途轨迹快照",
+          "version": "v3",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0004",
+        "role": "库存与运输分析",
+        "heartbeat": "10:42",
+        "progress": 68,
+        "budget": 7,
+        "toolCalls": [
+          "TMS 节点查询",
+          "ETA 差异计算"
+        ],
+        "result": "执行中"
+      },
+      "timeline": [
+        {
+          "at": "09:12",
+          "actor": "事件层",
+          "action": "事件接入",
+          "detail": "按 entity_id + version 幂等去重通过"
+        },
+        {
+          "at": "09:18",
+          "actor": "计划储运 Board Agent",
+          "action": "原子认领",
+          "detail": "WIP 2/3，创建 RUN-0004"
+        },
+        {
+          "at": "10:42",
+          "actor": "RUN-0004",
+          "action": "心跳",
+          "detail": "进度 68%，预算剩余充足"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0041",
+          "VIN-A-0042",
+          "VIN-A-0043",
+          "VIN-A-0044"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081",
+          "ORD-A-2026-0082"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-001"
+        ],
+        "entityId": "VIN-A-0041"
+      },
+      "humanGate": "对外交付承诺变更",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例一：运输延误影响交付",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-SALE-0005",
+      "board_id": "B2",
+      "title": "补充客户语言偏好",
+      "goal": "补齐多语通知所需字段，解除下游阻塞",
+      "scope": "关联订单 A · 客户 A",
+      "owner": "销售负责人 A",
+      "agent": "客户沟通与多语内容",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 16,
+      "slaRemainingHours": 2,
+      "dependencies": [
+        "C-PLAN-0004"
+      ],
+      "acceptance": [
+        "客户语言偏好已回填",
+        "字段变更有来源与操作者"
+      ],
+      "state": "Blocked",
+      "evidence": [],
+      "run": {
+        "run_id": "RUN-0005",
+        "role": "客户沟通与多语内容",
+        "heartbeat": "10:20",
+        "progress": 35,
+        "budget": 4,
+        "toolCalls": [
+          "CRM 只读查询"
+        ],
+        "result": "已暂停，等待人工补料"
+      },
+      "timeline": [
+        {
+          "at": "10:14",
+          "actor": "销售 Board Agent",
+          "action": "依赖请求",
+          "detail": "收到计划储运板运输延误影响通知"
+        },
+        {
+          "at": "10:20",
+          "actor": "RUN-0005",
+          "action": "进入 Blocked",
+          "detail": "记录缺什么、谁能解除、何时升级"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0042"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-001",
+          "EVT-2026-1124-005"
+        ],
+        "entityId": "ORD-A-2026-0081"
+      },
+      "humanGate": "Question",
+      "blockedReason": "缺 CRM-A 客户语言偏好字段；解除人：销售负责人 A；升级时点：SLA 到期前 2 小时",
+      "dedup": true,
+      "crossBoardCase": "案例一：运输延误影响交付",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-SALE-0006",
+      "board_id": "B2",
+      "title": "高风险车辆客户通知草稿",
+      "goal": "为 4 台延误车辆形成两语通知草稿，逐车说明原因、新承诺日期与联系渠道",
+      "scope": "4 台车辆 · 关联订单 A",
+      "owner": "销售负责人 A",
+      "agent": "客户沟通与多语内容",
+      "priority": "P0",
+      "risk": "高",
+      "slaHours": 16,
+      "slaRemainingHours": 1.5,
+      "dependencies": [
+        "C-PLAN-0004",
+        "C-SALE-0005"
+      ],
+      "acceptance": [
+        "两语通知各 4 份",
+        "新承诺日期核对表",
+        "未包含价格或合同变更",
+        "人工批准后才可发送"
+      ],
+      "state": "Review",
+      "evidence": [
+        {
+          "id": "EV-004",
+          "name": "两语通知草稿",
+          "version": "v2",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        },
+        {
+          "id": "EV-005",
+          "name": "新承诺日期核对表",
+          "version": "v3",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0006",
+        "role": "客户沟通与多语内容",
+        "heartbeat": "10:41",
+        "progress": 100,
+        "budget": 9,
+        "toolCalls": [
+          "多语通知生成",
+          "文档与证据检查"
+        ],
+        "result": "2 个产物待验收，写回待批准"
+      },
+      "timeline": [
+        {
+          "at": "10:12",
+          "actor": "销售 Board Agent",
+          "action": "创建任务",
+          "detail": "由交付风险事件建卡"
+        },
+        {
+          "at": "10:13",
+          "actor": "RUN-0006",
+          "action": "原子认领",
+          "detail": "WIP 2/3"
+        },
+        {
+          "at": "10:26",
+          "actor": "RUN-0006",
+          "action": "心跳与产物",
+          "detail": "生成两语草稿与核对表"
+        },
+        {
+          "at": "10:41",
+          "actor": "RUN-0006",
+          "action": "提交验收",
+          "detail": "正式发送与 DMS 写回需要人工批准"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0041",
+          "VIN-A-0042",
+          "VIN-A-0043",
+          "VIN-A-0044"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0081",
+          "ORD-A-2026-0082"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-001"
+        ],
+        "entityId": "ORD-A-2026-0081"
+      },
+      "humanGate": "Review",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例一：运输延误影响交付",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-SALE-0007",
+      "board_id": "B2",
+      "title": "重复订单合并",
+      "goal": "按业务主键合并重复订单投影，避免重复建卡与重复通知",
+      "scope": "关联订单 A",
+      "owner": "销售负责人 A",
+      "agent": "数据质量与主数据核验",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 16,
+      "slaRemainingHours": 0,
+      "dependencies": [],
+      "acceptance": [
+        "合并清单",
+        "幂等键记录",
+        "DMS 回写回执"
+      ],
+      "state": "Done",
+      "evidence": [
+        {
+          "id": "EV-006",
+          "name": "合并清单",
+          "version": "v1",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": true,
+          "reviewer": "销售负责人 A",
+          "reviewedAt": "10:58"
+        },
+        {
+          "id": "EV-007",
+          "name": "DMS 回写回执",
+          "version": "v1",
+          "uri": "本地演示／回执",
+          "systemReceipt": true
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0007",
+        "role": "数据质量与主数据核验",
+        "heartbeat": "10:55",
+        "progress": 100,
+        "budget": 5,
+        "toolCalls": [
+          "DMS 只读查询",
+          "幂等写回"
+        ],
+        "result": "DMS 已回写"
+      },
+      "timeline": [
+        {
+          "at": "10:44",
+          "actor": "销售 Board Agent",
+          "action": "去重",
+          "detail": "按 entity_id + version 合并"
+        },
+        {
+          "at": "10:55",
+          "actor": "RUN-0007",
+          "action": "回执",
+          "detail": "取得系统回执"
+        },
+        {
+          "at": "10:58",
+          "actor": "销售负责人 A",
+          "action": "验收通过",
+          "detail": "产物、证据、审批人、回执齐备"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0051"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0085"
+        ],
+        "eventIds": [],
+        "entityId": "ORD-A-2026-0085"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-SALE-0017",
+      "board_id": "B2",
+      "title": "订单与 VIN 异常匹配",
+      "goal": "清理订单与车辆匹配异常，锁定风险订单基线",
+      "scope": "28 台 VIN · 关联订单 A",
+      "owner": "销售负责人 A",
+      "agent": "数据质量与主数据核验",
+      "priority": "P1",
+      "risk": "中",
+      "slaHours": 16,
+      "slaRemainingHours": 0,
+      "dependencies": [],
+      "acceptance": [
+        "28 台 VIN 清单",
+        "版本证据",
+        "物流与财务双验收"
+      ],
+      "state": "Done",
+      "evidence": [
+        {
+          "id": "EV-008",
+          "name": "VIN 清单与版本证据",
+          "version": "v4",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": true,
+          "reviewer": "销售负责人 A",
+          "reviewedAt": "09:52"
+        },
+        {
+          "id": "EV-009",
+          "name": "风险订单基线锁定回执",
+          "version": "v1",
+          "uri": "本地演示／回执",
+          "systemReceipt": true
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0017",
+        "role": "数据质量与主数据核验",
+        "heartbeat": "09:50",
+        "progress": 100,
+        "budget": 6,
+        "toolCalls": [
+          "DMS 只读查询",
+          "VIN 匹配校验"
+        ],
+        "result": "对账通过，可归档"
+      },
+      "timeline": [
+        {
+          "at": "09:36",
+          "actor": "销售 Board Agent",
+          "action": "建卡",
+          "detail": "异常匹配任务"
+        },
+        {
+          "at": "09:52",
+          "actor": "销售负责人 A",
+          "action": "验收通过",
+          "detail": "物流与财务双验收，取得回执"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0061",
+          "VIN-A-0062"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0086"
+        ],
+        "eventIds": [],
+        "entityId": "ORD-A-2026-0086"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-AFTR-0008",
+      "board_id": "B3",
+      "title": "备件调拨与到货解锁",
+      "goal": "把到货卡设为维修卡前置依赖，缺件期间保持工单可追踪",
+      "scope": "工单 A · 备件 A · VIN A",
+      "owner": "售后负责人 A",
+      "agent": "计划与资源调度",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 12,
+      "slaRemainingHours": 5,
+      "dependencies": [],
+      "acceptance": [
+        "备件号与适配车型",
+        "库存位置与 ETA",
+        "调拨单与风险说明"
+      ],
+      "state": "Running",
+      "evidence": [
+        {
+          "id": "EV-010",
+          "name": "备件库存快照",
+          "version": "v2",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0008",
+        "role": "计划与资源调度",
+        "heartbeat": "11:02",
+        "progress": 45,
+        "budget": 4,
+        "toolCalls": [
+          "WMS 只读查询"
+        ],
+        "result": "执行中，心跳正常"
+      },
+      "timeline": [
+        {
+          "at": "11:04",
+          "actor": "售后 Board Agent",
+          "action": "事件接入",
+          "detail": "备件缺口事件去重通过"
+        },
+        {
+          "at": "11:06",
+          "actor": "RUN-0008",
+          "action": "原子认领",
+          "detail": "WIP 1/2"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0091"
+        ],
+        "orderIds": [],
+        "eventIds": [
+          "EVT-2026-1124-003"
+        ],
+        "entityId": "VIN-A-0091"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-AFTR-0009",
+      "board_id": "B3",
+      "title": "服务超时工单复核",
+      "goal": "复核超时工单的过程指标，形成改进建议草稿",
+      "scope": "工单 A · 客户 A",
+      "owner": "售后负责人 A",
+      "agent": "质量验收与证据整理",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 12,
+      "slaRemainingHours": 10,
+      "dependencies": [
+        "C-AFTR-0008"
+      ],
+      "acceptance": [
+        "超时原因分类",
+        "过程指标对照",
+        "改进建议草稿"
+      ],
+      "state": "Todo",
+      "evidence": [],
+      "run": {
+        "run_id": "",
+        "role": "",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "等待备件到货回执"
+      },
+      "timeline": [
+        {
+          "at": "11:12",
+          "actor": "售后 Board Agent",
+          "action": "准入通过",
+          "detail": "等待前置卡"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0091"
+        ],
+        "orderIds": [],
+        "eventIds": [],
+        "entityId": "VIN-A-0091"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-MRKT-0010",
+      "board_id": "B4",
+      "title": "话题研判与响应口径",
+      "goal": "对聚类话题做真伪与风险研判，形成可审批的响应口径",
+      "scope": "市场 A · 话题 A",
+      "owner": "品牌负责人 A",
+      "agent": "市场内容与版本管理",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 8,
+      "slaRemainingHours": 2.5,
+      "dependencies": [
+        "C-PROD-0013"
+      ],
+      "acceptance": [
+        "原始来源与截图",
+        "首发时间与传播路径",
+        "真实性核验",
+        "引用口径",
+        "审批人与发布版本"
+      ],
+      "state": "Review",
+      "evidence": [
+        {
+          "id": "EV-011",
+          "name": "话题聚类与来源包",
+          "version": "v2",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0010",
+        "role": "市场内容与版本管理",
+        "heartbeat": "11:20",
+        "progress": 100,
+        "budget": 6,
+        "toolCalls": [
+          "来源核验",
+          "风险分级"
+        ],
+        "result": "等待对外发布人工门"
+      },
+      "timeline": [
+        {
+          "at": "10:52",
+          "actor": "市场品牌 Board Agent",
+          "action": "建卡",
+          "detail": "由配置变更依赖事件生成"
+        },
+        {
+          "at": "11:20",
+          "actor": "RUN-0010",
+          "action": "提交验收",
+          "detail": "对外发布保持锁定"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [
+          "ORD-A-2026-0090"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-002"
+        ],
+        "entityId": "TOPIC-A-0003"
+      },
+      "humanGate": "Review",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例二：上市配置变更影响素材与价格",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-MRKT-0011",
+      "board_id": "B4",
+      "title": "常规声量周报",
+      "goal": "汇总常规声量与主题趋势，抽样复核后归档",
+      "scope": "市场 A · 活动 A",
+      "owner": "品牌负责人 A",
+      "agent": "市场内容与版本管理",
+      "priority": "P3",
+      "risk": "低",
+      "slaHours": 48,
+      "slaRemainingHours": 0,
+      "dependencies": [],
+      "acceptance": [
+        "周报与趋势图",
+        "抽样复核记录"
+      ],
+      "state": "Archived",
+      "evidence": [
+        {
+          "id": "EV-012",
+          "name": "周报与复核记录",
+          "version": "v1",
+          "uri": "本地演示／归档",
+          "systemReceipt": true,
+          "reviewer": "品牌负责人 A",
+          "reviewedAt": "09:30"
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0011",
+        "role": "市场内容与版本管理",
+        "heartbeat": "09:28",
+        "progress": 100,
+        "budget": 2,
+        "toolCalls": [
+          "声量汇总"
+        ],
+        "result": "已归档"
+      },
+      "timeline": [
+        {
+          "at": "09:30",
+          "actor": "品牌负责人 A",
+          "action": "验收通过",
+          "detail": "归档代替删除，历史保留"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [],
+        "eventIds": [],
+        "entityId": "CAMP-A-0002"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-DSGN-0012",
+      "board_id": "B5",
+      "title": "配置变更后的素材版本替换",
+      "goal": "找出受配置变更影响的素材，生成新旧版本替代关系并留痕",
+      "scope": "车型 A · 市场 A · 渠道 A",
+      "owner": "设计负责人 A",
+      "agent": "设计需求与评审支持",
+      "priority": "P1",
+      "risk": "中",
+      "slaHours": 48,
+      "slaRemainingHours": 14,
+      "dependencies": [
+        "C-PROD-0013"
+      ],
+      "acceptance": [
+        "受影响素材清单",
+        "可编辑源文件",
+        "新旧版本替代关系",
+        "停止使用留痕"
+      ],
+      "state": "Review",
+      "evidence": [
+        {
+          "id": "EV-013",
+          "name": "素材差异清单",
+          "version": "v2",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        },
+        {
+          "id": "EV-014",
+          "name": "源文件包",
+          "version": "v3",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0012",
+        "role": "设计需求与评审支持",
+        "heartbeat": "11:30",
+        "progress": 100,
+        "budget": 7,
+        "toolCalls": [
+          "版本差异检查",
+          "合规校对"
+        ],
+        "result": "等待关键视觉定稿人工门"
+      },
+      "timeline": [
+        {
+          "at": "10:30",
+          "actor": "设计 Board Agent",
+          "action": "依赖响应",
+          "detail": "接收产品管理板配置变更影响"
+        },
+        {
+          "at": "11:30",
+          "actor": "RUN-0012",
+          "action": "提交验收",
+          "detail": "关键视觉定稿需人工批准"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [
+          "ORD-A-2026-0090"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-002"
+        ],
+        "entityId": "ASSET-A-0021"
+      },
+      "humanGate": "Review",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例二：上市配置变更影响素材与价格",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PROD-0013",
+      "board_id": "B6",
+      "title": "上市配置变更影响分析",
+      "goal": "维护配置冻结与上市里程碑，向设计、市场、财法板发布带证据的依赖请求",
+      "scope": "车型 A · 配置 A · 市场 A",
+      "owner": "产品负责人 A",
+      "agent": "产品依赖与配置分析",
+      "priority": "P1",
+      "risk": "高",
+      "slaHours": 72,
+      "slaRemainingHours": 20,
+      "dependencies": [],
+      "acceptance": [
+        "受影响下游卡片清单",
+        "配置差异与版本",
+        "依赖请求与回执"
+      ],
+      "state": "Running",
+      "evidence": [
+        {
+          "id": "EV-015",
+          "name": "配置差异表",
+          "version": "v2",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0013",
+        "role": "产品依赖与配置分析",
+        "heartbeat": "11:26",
+        "progress": 62,
+        "budget": 8,
+        "toolCalls": [
+          "配置依赖图扫描",
+          "认证缺口检查"
+        ],
+        "result": "执行中，已发出 3 条跨板依赖"
+      },
+      "timeline": [
+        {
+          "at": "10:26",
+          "actor": "事件层",
+          "action": "事件接入",
+          "detail": "配置变更 v2 去重通过"
+        },
+        {
+          "at": "10:34",
+          "actor": "产品管理 Board Agent",
+          "action": "依赖广播",
+          "detail": "向设计、市场品牌、财法融资价格板发出影响通知"
+        },
+        {
+          "at": "11:26",
+          "actor": "RUN-0013",
+          "action": "心跳",
+          "detail": "进度 62%，无依赖环"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [
+          "ORD-A-2026-0090"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-002"
+        ],
+        "entityId": "CFG-A-0007"
+      },
+      "humanGate": "上市批准",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例二：上市配置变更影响素材与价格",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PROD-0014",
+      "board_id": "B6",
+      "title": "认证与说明书缺口检查",
+      "goal": "核对上市清单中认证、软件、说明书与培训依赖的完成度",
+      "scope": "车型 A · 市场 A",
+      "owner": "产品负责人 A",
+      "agent": "产品依赖与配置分析",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 72,
+      "slaRemainingHours": 40,
+      "dependencies": [
+        "C-PROD-0013"
+      ],
+      "acceptance": [
+        "缺口清单",
+        "每项缺口的责任人与期限"
+      ],
+      "state": "Ready",
+      "evidence": [
+        {
+          "id": "EV-016",
+          "name": "上市清单快照",
+          "version": "v1",
+          "uri": "本地演示／只读投影",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "",
+        "role": "产品依赖与配置分析",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "等待认领，仅存草稿"
+      },
+      "timeline": [
+        {
+          "at": "11:10",
+          "actor": "产品管理 Board Agent",
+          "action": "就绪守卫通过",
+          "detail": "依赖与验收条件齐备"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [],
+        "eventIds": [],
+        "entityId": "CFG-A-0007"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-FIN-0015",
+      "board_id": "B7",
+      "title": "价格与促销适用范围审批",
+      "goal": "核对配置变更后的价格影响与合同条件，形成审批意见与版本差异",
+      "scope": "客户 A · 合同 A · 价格版本 A",
+      "owner": "财法负责人 A",
+      "agent": "财务与合规规则检查",
+      "priority": "P0",
+      "risk": "高",
+      "slaHours": 24,
+      "slaRemainingHours": 4,
+      "dependencies": [
+        "C-PROD-0013"
+      ],
+      "acceptance": [
+        "价格版本与成本口径",
+        "条款差异与风险标注",
+        "授权范围与生效区域",
+        "审批人签字"
+      ],
+      "state": "Review",
+      "evidence": [
+        {
+          "id": "EV-017",
+          "name": "条款差异表",
+          "version": "v2",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        },
+        {
+          "id": "EV-018",
+          "name": "价格模拟与假设说明",
+          "version": "v1",
+          "uri": "本地演示／草稿箱",
+          "systemReceipt": false
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0015",
+        "role": "财务与合规规则检查",
+        "heartbeat": "11:34",
+        "progress": 100,
+        "budget": 6,
+        "toolCalls": [
+          "条款比对",
+          "价格模拟",
+          "合规规则检查"
+        ],
+        "result": "金额与折扣必须审批，规则引擎不得自动完成"
+      },
+      "timeline": [
+        {
+          "at": "10:40",
+          "actor": "财法融资价格 Board Agent",
+          "action": "建卡",
+          "detail": "接收配置变更价格影响"
+        },
+        {
+          "at": "11:34",
+          "actor": "RUN-0015",
+          "action": "提交验收",
+          "detail": "报价、折扣、价格发布保持人工门"
+        }
+      ],
+      "linkedIds": {
+        "vin": [
+          "VIN-A-0102"
+        ],
+        "orderIds": [
+          "ORD-A-2026-0099"
+        ],
+        "eventIds": [
+          "EVT-2026-1124-002",
+          "EVT-2026-1124-004"
+        ],
+        "entityId": "ORD-A-2026-0099"
+      },
+      "humanGate": "Review",
+      "blockedReason": "",
+      "dedup": true,
+      "crossBoardCase": "案例二：上市配置变更影响素材与价格",
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-FIN-0016",
+      "board_id": "B7",
+      "title": "合同缺件与补件清单",
+      "goal": "检查合同资料完整性，输出补件清单与差异提示",
+      "scope": "合同 A · 客户 A",
+      "owner": "财法负责人 A",
+      "agent": "文档抽取与条款差异",
+      "priority": "P2",
+      "risk": "中",
+      "slaHours": 24,
+      "slaRemainingHours": 16,
+      "dependencies": [],
+      "acceptance": [
+        "完整性检查结果",
+        "补件清单",
+        "版本差异留痕"
+      ],
+      "state": "Todo",
+      "evidence": [],
+      "run": {
+        "run_id": "",
+        "role": "",
+        "heartbeat": "",
+        "progress": 0,
+        "budget": 0,
+        "toolCalls": [],
+        "result": "等待权限与数据可用确认"
+      },
+      "timeline": [
+        {
+          "at": "11:40",
+          "actor": "财法融资价格 Board Agent",
+          "action": "准入通过",
+          "detail": "只做完整性检查，不自动执行"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [
+          "ORD-A-2026-0099"
+        ],
+        "eventIds": [],
+        "entityId": "CTR-A-0031"
+      },
+      "humanGate": "合同签署",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    },
+    {
+      "card_id": "C-PLAN-0018",
+      "board_id": "B1",
+      "title": "上期预测版本归档",
+      "goal": "归档已验收的需求预测版本，保留来源与生效期",
+      "scope": "市场 A · 车型 A",
+      "owner": "计划负责人 A",
+      "agent": "预测与异常检测",
+      "priority": "P3",
+      "risk": "低",
+      "slaHours": 48,
+      "slaRemainingHours": 0,
+      "dependencies": [],
+      "acceptance": [
+        "预测版本与来源",
+        "生效期与失效标记"
+      ],
+      "state": "Archived",
+      "evidence": [
+        {
+          "id": "EV-019",
+          "name": "预测版本包",
+          "version": "v5",
+          "uri": "本地演示／归档",
+          "systemReceipt": true,
+          "reviewer": "计划负责人 A",
+          "reviewedAt": "08:40"
+        }
+      ],
+      "run": {
+        "run_id": "RUN-0018",
+        "role": "预测与异常检测",
+        "heartbeat": "08:38",
+        "progress": 100,
+        "budget": 3,
+        "toolCalls": [
+          "版本归档"
+        ],
+        "result": "已归档，后续问题新建子卡"
+      },
+      "timeline": [
+        {
+          "at": "08:40",
+          "actor": "计划负责人 A",
+          "action": "验收通过",
+          "detail": "归档代替删除"
+        }
+      ],
+      "linkedIds": {
+        "vin": [],
+        "orderIds": [],
+        "eventIds": [],
+        "entityId": "FCST-A-0005"
+      },
+      "humanGate": "",
+      "blockedReason": "",
+      "dedup": true,
+      "dataTag": "演示虚构数据"
+    }
+  ],
+  "approvals": [
+    {
+      "id": "AP-001",
+      "gate": "Notify",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0004",
+      "title": "在途节点异常需关注",
+      "reason": "新 ETA 与订单承诺日出现偏差，尚在允许范围内",
+      "impact": "2 个关联订单的交付窗口可能收缩",
+      "evidence": [
+        "在途轨迹快照 v3"
+      ],
+      "deadline": "今日 18:00",
+      "overdueConsequence": "继续允许范围内低风险工作，到期自动升级为 Question",
+      "requester": "计划储运 Board Agent",
+      "approver": "计划负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-002",
+      "gate": "Question",
+      "board_id": "B2",
+      "card_id": "C-SALE-0005",
+      "title": "缺少客户语言偏好",
+      "reason": "多语通知需要客户语言字段，CRM-A 投影中该字段为空",
+      "impact": "4 份通知草稿无法定稿，下游 Review 保持等待",
+      "evidence": [
+        "字段检查结果"
+      ],
+      "deadline": "今日 14:00",
+      "overdueConsequence": "卡片保持 Blocked，不得猜测后继续，SLA 到期升级",
+      "requester": "销售 Board Agent",
+      "approver": "销售负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-003",
+      "gate": "Review",
+      "board_id": "B2",
+      "card_id": "C-SALE-0006",
+      "title": "高风险车辆客户通知草稿验收",
+      "reason": "涉及正式客户通知与交付承诺，属高风险对外动作",
+      "impact": "批准后由系统幂等写回；不批准则保持草稿",
+      "evidence": [
+        "两语通知草稿 v2",
+        "新承诺日期核对表 v3",
+        "写回待批准"
+      ],
+      "deadline": "今日 16:00",
+      "overdueConsequence": "保持 Review，超时升级至 Arbitration",
+      "requester": "销售 Board Agent",
+      "approver": "销售负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-004",
+      "gate": "Review",
+      "board_id": "B7",
+      "card_id": "C-FIN-0015",
+      "title": "价格与促销适用范围审批",
+      "reason": "金额、折扣与价格发布必须人工审批，规则引擎不得自动完成",
+      "impact": "影响合同条件与价格版本生效区域",
+      "evidence": [
+        "条款差异表 v2",
+        "价格模拟与假设说明 v1"
+      ],
+      "deadline": "今日 17:00",
+      "overdueConsequence": "价格发布保持锁定，超时升级",
+      "requester": "财法融资价格 Board Agent",
+      "approver": "财法负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-005",
+      "gate": "Arbitration",
+      "board_id": "B6",
+      "card_id": "C-PROD-0013",
+      "title": "上市发布节奏与合规验收冲突",
+      "reason": "一方要求提前发布，另一方合规验收尚未完成",
+      "impact": "冻结发布动作，不冻结素材与备件等无关工作",
+      "evidence": [
+        "配置差异表 v2",
+        "三方影响摘要"
+      ],
+      "deadline": "今日 20:00",
+      "overdueConsequence": "冲突动作保持冻结，全局协调角色只呈现选项",
+      "requester": "跨板经营分析与冲突协调",
+      "approver": "产品负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-006",
+      "gate": "Kill",
+      "board_id": "B4",
+      "card_id": "C-MRKT-0010",
+      "title": "重复对外动作拦截演练",
+      "reason": "检测到同一话题存在重复发布草稿，触发停用演练",
+      "impact": "撤销凭据、停止相关实例，保留证据转人工流程",
+      "evidence": [
+        "重复发布检测结果",
+        "当前运行实例清单"
+      ],
+      "deadline": "立即",
+      "overdueConsequence": "立即停止发送，启动业务补救与审计复核",
+      "requester": "治理与风险监测",
+      "approver": "品牌负责人 A",
+      "decision": "待处理"
+    },
+    {
+      "id": "AP-007",
+      "gate": "Notify",
+      "board_id": "B3",
+      "card_id": "C-AFTR-0008",
+      "title": "备件到货 ETA 变化",
+      "reason": "调拨单 ETA 更新，需要同步维修排程",
+      "impact": "工单预计完成时间顺延",
+      "evidence": [
+        "库存与 ETA 快照 v2"
+      ],
+      "deadline": "今日 19:00",
+      "overdueConsequence": "继续低风险工作并提示关注",
+      "requester": "售后 Board Agent",
+      "approver": "售后负责人 A",
+      "decision": "待处理"
+    }
+  ],
+  "templates": [
+    {
+      "id": "TPL-EXEC",
+      "name": "大老板情报雷达",
+      "shortName": "大老板",
+      "enName": "Executive Intelligence Radar",
+      "subtitle": "只看与我关注的业务有关的变化：重大例外、经营影响与证据下钻",
+      "accent": "#F0A04B",
+      "focusTopics": [
+        "交付风险",
+        "跨板冲突",
+        "价格与合规",
+        "上市节点",
+        "重大舆情",
+        "经营影响汇总"
+      ],
+      "layout": [
+        "今日重要变化",
+        "需要我的动作",
+        "风险地图",
+        "我的决策",
+        "证据与来源",
+        "关注主题组合"
+      ],
+      "alertThreshold": {
+        "importantChanges": 5,
+        "myActions": 1,
+        "riskLevel": "高",
+        "digestFrequency": "每日一次"
+      },
+      "permissions": [
+        "组合关注",
+        "下钻证据",
+        "发起决策",
+        "只读投影"
+      ],
+      "projectionLabel": "情报投影"
+    },
+    {
+      "id": "TPL-MGR",
+      "name": "中层决策室",
+      "shortName": "中层",
+      "enName": "Decision & Alignment Hub",
+      "subtitle": "把多方意见、冲突、方案与审批放在同一屏，处理授权范围内的决定",
+      "accent": "#9EC5CF",
+      "focusTopics": [
+        "多方判断",
+        "预算与交期冲突",
+        "方案比较",
+        "跨板依赖",
+        "审批与拍板"
+      ],
+      "layout": [
+        "多方判断",
+        "方案比较",
+        "我的决定",
+        "决策输出写回",
+        "冲突与仲裁"
+      ],
+      "alertThreshold": {
+        "decisionDueHours": 4,
+        "conflictCount": 2,
+        "requiredEvidence": 3,
+        "reviewFrequency": "实时"
+      },
+      "permissions": [
+        "协调资源",
+        "审批",
+        "拍板",
+        "写回相关 Board Agent"
+      ],
+      "projectionLabel": "决策投影"
+    },
+    {
+      "id": "TPL-OPS",
+      "name": "执行层工具台",
+      "shortName": "执行层",
+      "enName": "Agent Operations Workbench",
+      "subtitle": "只看正在做什么、产物是否可用、何时需要接管",
+      "accent": "#E8875A",
+      "focusTopics": [
+        "Agent 运行队列",
+        "工具与产物",
+        "阻塞与补料",
+        "待验收产物",
+        "人工接管"
+      ],
+      "layout": [
+        "Agent 运行队列",
+        "我的工具",
+        "当前任务／通知草稿",
+        "验收条件",
+        "人工接管"
+      ],
+      "alertThreshold": {
+        "heartbeatTimeoutMin": 15,
+        "evidenceMin": 2,
+        "retryLimit": 2,
+        "checkFrequency": "实时"
+      },
+      "permissions": [
+        "补资料",
+        "验收",
+        "纠错",
+        "人工接管",
+        "只读业务系统"
+      ],
+      "projectionLabel": "工具投影"
+    }
+  ],
+  "thresholds": {
+    "slaWarningHours": 4,
+    "slaCriticalHours": 1,
+    "falsePositiveRate": 0.08,
+    "budgetPerRun": 12,
+    "budgetPerBoard": 200,
+    "maxRounds": 6,
+    "wipGlobal": 8,
+    "maxRetries": 2,
+    "circuitBreakerRepeatFailures": 3,
+    "heartbeatTimeoutMin": 15,
+    "dependencyRingDetection": true,
+    "iPeak": {
+      "lambda": 120,
+      "S": 8,
+      "M": 1.3,
+      "K": 1.25,
+      "peakSlots": 26
+    },
+    "note": "全部为演示虚构数据 · 阈值与容量均为纯假设示例，可调但需自行校准"
+  },
+  "formulas": {
+    "agentCount": {
+      "expression": "A = B + R + G",
+      "pilot": "1 + 3 + 1 = 5",
+      "full": "7 + 12 + 2 = 21",
+      "fullWithControlBoard": "7 + 12 + 2 + 1 = 22",
+      "note": "演示虚构数据 · 方案结构假设，不是行业标准"
+    },
+    "iPeak": {
+      "expression": "I_peak = ceil(λ × S ÷ 60 × M × K)",
+      "lambdaDesc": "峰值每小时进入执行的任务数",
+      "SDesc": "平均实际执行分钟数",
+      "MDesc": "每活动任务平均并行实例数",
+      "KDesc": "应对突发与重试的安全系数",
+      "example": "ceil(120 × 8 ÷ 60 × 1.3 × 1.25) = 26",
+      "note": "演示虚构数据 · 26 个并发槽位为纯假设示例，不是行业标准或最佳配置"
+    },
+    "value": {
+      "expression": "V = 节省人工协调成本 + 减少延误／返工／错误损失 + 可避免的重复建设成本 − 平台运行成本 − 新增治理成本",
+      "note": "演示虚构数据 · 不预设任何未经验证的提升百分比"
+    }
+  },
+  "autonomyLevels": [
+    {
+      "id": "L0",
+      "name": "展示",
+      "desc": "汇总状态，不主动判断；人巡板、人派单、人验收",
+      "stage": "既有基线"
+    },
+    {
+      "id": "L1",
+      "name": "感知建议",
+      "desc": "发现风险、生成摘要、建议建卡或转派；人确认每项建议",
+      "stage": "影子运行与基线验证"
+    },
+    {
+      "id": "L2",
+      "name": "板面自治",
+      "desc": "自动维护状态、优先级、提醒与验收请求；审批业务写操作",
+      "stage": "试点主要目标"
+    },
+    {
+      "id": "L3",
+      "name": "受控执行",
+      "desc": "在白名单内执行可逆、低风险动作；人管策略、审计与定期复核",
+      "stage": "通过门槛后有限开放"
+    },
+    {
+      "id": "L4",
+      "name": "有限域自治",
+      "desc": "稳定域内自主规划、执行、恢复与优化；仅限成熟、可逆、低风险局部流程",
+      "stage": "不作为总体目标"
+    }
+  ],
+  "architecture": [
+    {
+      "id": "L5",
+      "name": "治理与监督",
+      "desc": "贯穿全链路，不替代业务责任",
+      "items": [
+        "人类策略与审批",
+        "身份权限与策略",
+        "持久工作流",
+        "可观测与成本",
+        "全局冲突协调",
+        "紧急停用"
+      ]
+    },
+    {
+      "id": "L4",
+      "name": "共享专业 Agent 池＋按需实例",
+      "desc": "6 组能力池，可展开 12 个细分角色；Ready 时才创建运行实例",
+      "items": [
+        "数据分析",
+        "计划调度",
+        "客户与内容",
+        "文档与合规",
+        "系统执行",
+        "质量验收"
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "看板＝共享结构化状态＋七个 Board Agent",
+      "desc": "目标／责任／依赖／验收／状态轨迹；每板独立目标、状态、策略、权限、预算与审计",
+      "items": [
+        "计划储运",
+        "销售",
+        "售后服务",
+        "市场品牌",
+        "设计",
+        "产品管理",
+        "财法融资价格"
+      ]
+    },
+    {
+      "id": "L2",
+      "name": "事件接入与业务语义层",
+      "desc": "把不同系统的事件转换为统一任务语言",
+      "items": [
+        "标准化",
+        "去重",
+        "幂等键",
+        "Outbox",
+        "SLA 时钟",
+        "事实核验"
+      ]
+    },
+    {
+      "id": "L1",
+      "name": "业务事件与权威系统",
+      "desc": "看板只保存任务投影，不替代权威业务记录",
+      "items": [
+        "DMS",
+        "CRM",
+        "ERP",
+        "TMS",
+        "WMS",
+        "售后",
+        "设计资产",
+        "产品与认证",
+        "合同价格"
+      ]
+    }
+  ],
+  "loop": [
+    {
+      "step": 1,
+      "id": "Observe",
+      "name": "读取",
+      "input": "新事件、卡片差异、依赖与心跳",
+      "output": "已去重的板面快照",
+      "stop": "数据源不可用则降级并告警"
+    },
+    {
+      "step": 2,
+      "id": "Evaluate",
+      "name": "评价",
+      "input": "目标、SLA、WIP、风险规则",
+      "output": "风险分级与优先级建议",
+      "stop": "口径冲突或数据不足则提问"
+    },
+    {
+      "step": 3,
+      "id": "Plan",
+      "name": "规划",
+      "input": "当前状态、可用角色、历史案例",
+      "output": "最小行动计划与验收条件",
+      "stop": "达到最大规划轮次仍未收敛"
+    },
+    {
+      "step": 4,
+      "id": "Authorize",
+      "name": "授权",
+      "input": "权限、预算、动作风险",
+      "output": "自动执行或审批请求",
+      "stop": "高风险、越权、超预算即暂停"
+    },
+    {
+      "step": 5,
+      "id": "Dispatch",
+      "name": "派单",
+      "input": "任务包、角色能力、上下文",
+      "output": "按需任务实例与幂等键",
+      "stop": "无合适角色或队列拥塞则升级"
+    },
+    {
+      "step": 6,
+      "id": "Monitor",
+      "name": "监测",
+      "input": "心跳、工具回执、产物、剩余预算",
+      "output": "进度、异常、重试或补偿",
+      "stop": "重复失败、无进展、循环依赖即熔断"
+    },
+    {
+      "step": 7,
+      "id": "Review",
+      "name": "验收",
+      "input": "验收规则、证据包、差异报告",
+      "output": "通过、驳回或补件",
+      "stop": "无责任人或证据不足不得 Done"
+    },
+    {
+      "step": 8,
+      "id": "Learn",
+      "name": "学习",
+      "input": "人类反馈、结果与复盘",
+      "output": "经版本化的偏好、模板与案例",
+      "stop": "高风险策略变更必须另行审批"
+    }
+  ],
+  "stopConditions": [
+    "目标已验收",
+    "无待办事项",
+    "达到最大轮次",
+    "重复失败",
+    "预算耗尽",
+    "权限不足",
+    "数据冲突",
+    "依赖环",
+    "人类停用",
+    "心跳丢失"
+  ],
+  "degradePath": "L3 → L2 → L1 → 规则流程／人工看板；降级不删除状态、不阻断人工访问，保留已产生证据与未完成任务。",
+  "metrics": {
+    "note": "演示虚构数据 · 以下全部为方案假设基线，不构成收益承诺、行业标准或真实业务指标",
+    "dimensions": [
+      {
+        "id": "M1",
+        "name": "流转效率",
+        "subtitle": "看工作在哪里等待",
+        "accent": "#F0A04B",
+        "items": [
+          {
+            "name": "每百卡人工追板工时",
+            "baseline": 18.5,
+            "unit": "小时",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "Ready／Blocked 平均等待",
+            "baseline": 4.2,
+            "unit": "小时",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "Running 实际执行时长",
+            "baseline": 8,
+            "unit": "分钟",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "端到端闭环周期",
+            "baseline": 36,
+            "unit": "小时",
+            "target": "由业务基线设定"
+          }
+        ]
+      },
+      {
+        "id": "M2",
+        "name": "AI 工作质量",
+        "subtitle": "看结果是否可信、可复用",
+        "accent": "#9EC5CF",
+        "items": [
+          {
+            "name": "一次验收通过率",
+            "baseline": 0.82,
+            "unit": "比率",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "重试／循环／熔断率",
+            "baseline": 0.06,
+            "unit": "比率",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "证据完整率",
+            "baseline": 0.91,
+            "unit": "比率",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "无效通知与重复卡率",
+            "baseline": 0.04,
+            "unit": "比率",
+            "target": "由业务基线设定"
+          }
+        ]
+      },
+      {
+        "id": "M3",
+        "name": "业务结果",
+        "subtitle": "看经营是否真正改善",
+        "accent": "#E8875A",
+        "items": [
+          {
+            "name": "准时交付过程指标",
+            "baseline": 0.88,
+            "unit": "比率",
+            "target": "先记录基线再设目标"
+          },
+          {
+            "name": "备件满足过程指标",
+            "baseline": 0.79,
+            "unit": "比率",
+            "target": "先记录基线再设目标"
+          },
+          {
+            "name": "素材按期过程指标",
+            "baseline": 0.85,
+            "unit": "比率",
+            "target": "先记录基线再设目标"
+          },
+          {
+            "name": "上市里程碑按期指标",
+            "baseline": 0.76,
+            "unit": "比率",
+            "target": "先记录基线再设目标"
+          }
+        ]
+      },
+      {
+        "id": "M4",
+        "name": "单位经济性",
+        "subtitle": "按成功闭环任务归集全成本",
+        "accent": "#9CC5A8",
+        "items": [
+          {
+            "name": "每成功闭环任务全成本",
+            "baseline": 12.4,
+            "unit": "演示单位",
+            "target": "由业务与财务共同设定"
+          },
+          {
+            "name": "人工复核时间",
+            "baseline": 0.6,
+            "unit": "小时／任务",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "返工与重开占比",
+            "baseline": 0.09,
+            "unit": "比率",
+            "target": "由业务基线设定"
+          },
+          {
+            "name": "每百卡审批量",
+            "baseline": 7.2,
+            "unit": "次",
+            "target": "由业务基线设定"
+          }
+        ]
+      }
+    ],
+    "baselinePolicy": "试点评估口径：同类任务、同一时间窗、同一业务规则，对比上线前基线；先记录基线，再设目标，不预设未经验证的提升百分比。"
+  },
+  "audit": [
+    {
+      "at": "09:12:04",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0004",
+      "run_id": "-",
+      "action": "Observe",
+      "reason": "运输节点延误事件 v3 到达，按 entity_id+event_type+version 幂等去重通过",
+      "policyVersion": "PV-1.0",
+      "actor": "事件接入层"
+    },
+    {
+      "at": "09:14:20",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0004",
+      "run_id": "-",
+      "action": "Evaluate",
+      "reason": "SLA 剩余 3.5 小时，WIP 2/3，风险分级为高，建议升优先级",
+      "policyVersion": "PV-1.0",
+      "actor": "计划储运 Board Agent"
+    },
+    {
+      "at": "09:16:02",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0002",
+      "run_id": "-",
+      "action": "Plan",
+      "reason": "生成最小下一步：拆出替代运输方案对照子卡，不重复建卡",
+      "policyVersion": "PV-1.0",
+      "actor": "计划储运 Board Agent"
+    },
+    {
+      "at": "09:17:41",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0004",
+      "run_id": "RUN-0004",
+      "action": "Authorize",
+      "reason": "L2 板面自治，只读核验动作在授权范围内；对外承诺变更保留人工门",
+      "policyVersion": "PV-1.0",
+      "actor": "治理与风险监测"
+    },
+    {
+      "at": "09:18:33",
+      "board_id": "B1",
+      "card_id": "C-PLAN-0004",
+      "run_id": "RUN-0004",
+      "action": "Dispatch",
+      "reason": "选择库存与运输分析角色，创建按需实例并写入幂等键",
+      "policyVersion": "PV-1.0",
+      "actor": "计划储运 Board Agent"
+    },
+    {
+      "at": "10:14:09",
+      "board_id": "B2",
+      "card_id": "C-SALE-0005",
+      "run_id": "RUN-0005",
+      "action": "Monitor",
+      "reason": "跨板依赖请求到达；检测到 CRM-A 客户语言偏好字段缺失，进入 Question 门",
+      "policyVersion": "PV-1.0",
+      "actor": "销售 Board Agent"
+    },
+    {
+      "at": "10:26:15",
+      "board_id": "B6",
+      "card_id": "C-PROD-0013",
+      "run_id": "RUN-0013",
+      "action": "Plan",
+      "reason": "配置变更 v2 触发，向设计、市场品牌、财法融资价格板广播带证据的依赖请求",
+      "policyVersion": "PV-1.0",
+      "actor": "产品管理 Board Agent"
+    },
+    {
+      "at": "10:41:52",
+      "board_id": "B2",
+      "card_id": "C-SALE-0006",
+      "run_id": "RUN-0006",
+      "action": "Review",
+      "reason": "产物与证据已齐，正式客户通知保持 Review 等待人工门，规则引擎不得自动 Done",
+      "policyVersion": "PV-1.0",
+      "actor": "销售 Board Agent"
+    },
+    {
+      "at": "10:58:30",
+      "board_id": "B2",
+      "card_id": "C-SALE-0007",
+      "run_id": "RUN-0007",
+      "action": "Learn",
+      "reason": "验收反馈与幂等回执写回策略记忆，形成可复用去重案例",
+      "policyVersion": "PV-1.1",
+      "actor": "质量验收与证据整理"
+    },
+    {
+      "at": "11:34:07",
+      "board_id": "B7",
+      "card_id": "C-FIN-0015",
+      "run_id": "RUN-0015",
+      "action": "Authorize",
+      "reason": "价格与折扣属高风险动作，拒绝自动执行，生成 Review 审批请求",
+      "policyVersion": "PV-1.1",
+      "actor": "治理与风险监测"
+    }
+  ],
+  "ui": {
+    "navItems": [
+      "概览",
+      "业务看板",
+      "卡片详情",
+      "审批与验收",
+      "架构与治理",
+      "指标",
+      "演示控制台"
+    ],
+    "reducedMotionDefault": false,
+    "defaultBoardFilter": "ALL",
+    "defaultTemplateFilter": "ALL",
+    "defaultColumnsMode": 6,
+    "traceMaxRows": 400
+  }
+}
