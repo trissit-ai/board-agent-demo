@@ -638,6 +638,15 @@ body.no-3d .card:hover{transform:translateY(-3px)}
 .btn-primary{background:#FFFFFF;background-image:none;border-color:#FFFFFF;color:#1E2A2F;font-weight:600}
 .btn-primary:hover{background:#F7F3EC;background-image:none;color:#1E2A2F}
 .chip-btn.on{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.40);color:#F2F5F4}
+/* 下拉框：去掉原生 appearance，箭头改自绘内联 SVG 并收进药丸内；顶栏两个选择器不被挤出文字 */
+.select{
+  -webkit-appearance:none; appearance:none; padding-right:30px;
+  background-color:rgba(30,42,48,.72);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23F0A04B' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:10px 6px;
+}
+.select::-ms-expand{display:none}
+.topbar .select{flex:0 0 auto;min-width:112px}
 .nav-item.active{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.22);box-shadow:none}
 .nav-item .ni-ico{border-radius:999px}
 .nav-item.active .ni-ico{box-shadow:none;background:rgba(240,160,75,.22);color:#F0A04B}
