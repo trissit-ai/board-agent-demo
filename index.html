@@ -535,16 +535,19 @@ body.no-3d .role-item:hover,body.no-3d .loop-step:hover,body.no-3d .event-tile:h
 @media (max-width:1100px){
   body{overflow:auto}
   .app-shell{height:auto;min-height:100vh;grid-template-rows:auto 1fr auto}
-  .body-grid{grid-template-columns:1fr}
+  .body-grid{grid-template-columns:minmax(0,1fr)}
   .sidebar{flex-direction:row;overflow-x:auto;padding:8px;gap:6px}
   .nav-item{margin:0;white-space:nowrap}
   .sidebar-foot{display:none}
-  .ov-grid,.grid-4,.grid-3,.gate-grid,.console-grid,.detail-grid{grid-template-columns:1fr}
+  .ov-grid,.grid-4,.grid-3,.gate-grid,.console-grid,.detail-grid{grid-template-columns:minmax(0,1fr)}
   .board-stats,.ov-events,.calc-grid,.role-chip-grid,.engine-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
   .loop-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .topbar{flex-wrap:wrap;height:auto;padding:10px 14px;gap:8px}
-  .topbar-tools{flex-wrap:wrap;justify-content:flex-start}
-  .main-area{overflow:visible}
+  /* 窄屏：品牌区可收缩；工具区作为整体在放不下时换到下一行（基准 360px），搜索框允许收缩，避免顶栏撑宽页面 */
+  .brand{min-width:0}
+  .topbar-tools{flex:1 1 360px;min-width:0;flex-wrap:wrap;justify-content:flex-start}
+  .search-wrap{min-width:0}
+  .main-area{overflow:visible;min-width:0}
 }
 </style>
 <style id="theme-unwind">
@@ -2830,9 +2833,13 @@ function renderArchitecture() {
     '<div class="arch-stage"><div class="arch-stack">' + layers + '</div></div>' +
     '<div class="tiny faint">看板保存协同状态，不替代 DMS／CRM／ERP／TMS／WMS 的权威业务记录；每板一个持续存在的 Board Agent，专业执行由共享池按需派生运行实例。</div></div>';
 
+  // 说明文字与节点高亮指向同一步：stepIndex 是「刚执行完的步号」(1–8)，对应 cfg.loop[stepIndex - 1]；0 表示尚未执行，显示第 1 步。
+  const loopList = cfg.loop || [];
+  const loopNow = loopList[Math.max(0, (Number(state.engine.stepIndex) || 0) - 1)] || loopList[0];
   const loopSection = '<div class="glass panel">' + panelHead('八步闭环 · 点击逐步演示', '每步写审计 Trace，纯前端确定性规则模拟') +
     '<div class="loop-grid">' + loop + '</div>' +
-    '<div class="notice sim">当前步骤：' + esc((cfg.loop || [])[state.engine.stepIndex] ? (cfg.loop[state.engine.stepIndex].id + ' · ' + cfg.loop[state.engine.stepIndex].output) : '已完成一轮，等待 Learn 之后归零') +
+    '<div class="notice sim">当前步骤：' + (loopNow ? esc(loopNow.id + ' · ' + loopNow.output) : '—') +
+    (Number(state.engine.stepIndex) === 8 ? '　·　一轮闭环已完成，下一步回到 Observe' : '') +
     '　·　' + esc(cfg.meta.simNotice) + '　·　停止条件：' + esc((cfg.stopConditions || []).slice(0, 5).join('、')) + '等。</div></div>';
 
   const govSection = '<div class="glass panel">' + panelHead('治理与风险 · 停止条件与降级路径', '默认拒绝、分级授权、可逆优先、证据验收、全程留痕、单板熔断') +
@@ -3592,7 +3599,7 @@ function runEngineStep(forcedStep) {
       const pv = 'PV-1.' + (2 + eng.rounds);
       reason = 'Learn：把经批准的反馈与案例写回策略记忆，策略版本 ' + pv + '；高风险策略变更必须另行审批；完成一轮闭环（规则模拟 / 虚构数据）';
       pushAudit(Object.assign({}, base, { action, reason, policyVersion: pv, actor: '规则模拟引擎' }), true);
-      eng.stepIndex = 0;
+      // 不再把 stepIndex 归零：保持 8，让 08 Learn 节点高亮并显示 Learn 说明；下一步由 (stepIndex % 8) + 1 自然回到 1。
       eng.lastReasons.push(reason);
       if (state.view === '架构与治理' || state.view === '演示控制台') renderView();
       else renderTracePanel();
